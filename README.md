@@ -1,2 +1,4 @@
-# 40622-alunos.isel.ipl.pt
+
 RiotClient
+
+Client for the Riot API
