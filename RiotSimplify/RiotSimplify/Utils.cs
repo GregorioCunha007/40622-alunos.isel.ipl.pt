@@ -59,6 +59,29 @@ namespace RiotSimplify
             }
         }
 
+        public static string GetSummonerIconPath(int summonerIcon)
+        {
+            try
+            {
+
+                dynamic icons = JsonConvert.DeserializeObject(LoadJson(@"D:\Riot-Simplify\RiotSimplify\RiotSimplify\StaticData\summoner-icons.json"));
+
+                foreach (var icon in icons)
+                {
+                    if (icon.id == summonerIcon)
+                    {
+                        return icon.imagePath;
+                    }
+                }
+
+                throw new Exception(string.Format("No Summonner icon with ID: {0}", summonerIcon), new ArgumentException());
+            }
+            catch (Exception e)
+            {
+                throw new Exception(string.Format("Failed getting summoner icon for id {0}", summonerIcon), e);
+            }
+        }
+
         public static Url AppendQueryString(this Url url, Dictionary<string, string> queryString)
         {
             if (queryString == null)

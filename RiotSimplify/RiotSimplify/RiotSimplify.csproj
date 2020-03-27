@@ -74,6 +74,7 @@
     <Compile Include="RiotSimplify.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MatchService.cs" />
+    <Compile Include="Services\UserAccountService.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup />

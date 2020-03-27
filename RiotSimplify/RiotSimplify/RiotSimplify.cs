@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RiotSimplify
 {
-    public class RiotSimplify : MatchService
+    public class RiotSimplify : MatchService, UserAccountService
     {
         private MatchClient matchClient;
         private UserClient userClient;
@@ -49,6 +49,18 @@ namespace RiotSimplify
             catch (Exception e)
             {
                 throw new Exception(string.Format("Failed to get match with id {0}", matchId), e);
+            }
+        }
+
+        public async Task<string> GetSummonerIcon()
+        {
+            try
+            {
+                return await userClient.GetSummonerIconPath(SummonerName);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to get summonner icon", e);
             }
         }
 
