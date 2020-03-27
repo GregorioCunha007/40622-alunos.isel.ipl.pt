@@ -9,6 +9,7 @@ namespace RiotSimplify
     public static class RiotApiUtils
     {
         public static string Api = "https://euw1.api.riotgames.com";
+        public static string IconsApi = "http://ddragon.leagueoflegends.com/cdn/6.3.1/img/profileicon/";
 
         public static string ApiKey { get; internal set; }
 
