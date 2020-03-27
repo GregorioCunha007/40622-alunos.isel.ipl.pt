@@ -52,7 +52,7 @@ namespace RiotSimplify.Clients
 
                 currentUser = await url.GetJsonAsync<UserInfoDto>();
 
-                return Utils.GetSummonerIconPath(currentUser.ProfileIconId);
+                return RiotApiUtils.IconsApi + currentUser.ProfileIconId + ".png";
             }
             catch (FlurlHttpException e)
             {
