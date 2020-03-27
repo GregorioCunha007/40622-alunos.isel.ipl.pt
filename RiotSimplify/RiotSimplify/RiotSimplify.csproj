@@ -80,9 +80,9 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="StaticData\champion.json" />
-    <None Include="StaticData\patches.json" />
-    <None Include="StaticData\summoner-icons.json" />
+    <EmbeddedResource Include="StaticData\champion.json" />
+    <EmbeddedResource Include="StaticData\patches.json" />
+    <EmbeddedResource Include="StaticData\summoner-icons.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
