@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace RiotSimplify
 {
-    public class RiotSimplify : MatchService, UserAccountService
+    public class RiotApiClient : MatchService, UserAccountService
     {
         private MatchClient matchClient;
         private UserClient userClient;
 
         public String SummonerName { get; set; } 
 
-        public RiotSimplify (string apiKey, string summonerName = null)
+        public RiotApiClient (string apiKey, string summonerName = null)
         {
             RiotApiUtils.ApiKey = apiKey;
             SummonerName = summonerName;
