@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Flurl;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace RiotSimplify
 {
@@ -36,7 +37,8 @@ namespace RiotSimplify
         {
             try
             {
-                dynamic json = (Array) JsonConvert.DeserializeObject(LoadJson(@"D:\Riot-Simplify\RiotSimplify\RiotSimplify\StaticData\patches.json"));
+                
+                dynamic json = JsonConvert.DeserializeObject(LoadJson(@"D:\Riot-Simplify\RiotSimplify\RiotSimplify\StaticData\patches.json"));
 
                 foreach (var patch in json.patches)
                 {

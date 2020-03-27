@@ -12,14 +12,17 @@ namespace RiotSimplify
 
         public static string ApiKey { get; internal set; }
 
+        public static string AccountId { get; internal set; }
+
         public static string GetPosition(string lane, string role)
         {
-            if (lane == "MID_LANE" && role == "SOLO") return "MIDDLE";
-            if (lane == "TOP_LANE" && role == "SOLO") return "TOP";
-            if (lane == "JUNGLE"   && role == "NONE") return "JUNGLE";
-            if (lane == "BOT_LANE" && role == "DUO_CARRY") return "BOTTOM";
-            if (lane == "BOT_LANE" && role == "DUO_SUPPORT") return "SUPPORT";
+            if (lane == "MIDDLE" || lane == "MID") return "MIDDLE";
+            if (lane == "TOP") return "TOP";
+            if (lane == "JUNGLE") return "JUNGLE";
+            if ((lane == "BOTTOM" || (lane == "NONE" && role == "DUO_CARRY"))) return "BOTTOM";
+            if ((lane == "BOTTOM" || (lane == "NONE" && role == "DUO_SUPPORT"))) return "SUPPORT";
             else return "UNKNOWN";
         }
+        
     }
 }

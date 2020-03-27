@@ -22,33 +22,18 @@ namespace RiotSimplify
             SummonerName = summonerName;
             matchClient = new MatchClient();
             userClient = new UserClient();
-            Init();
-        }
-
-        private async void Init()
-        {
-            if (userClient == null)
-            {
-                userClient = new UserClient();
-            }
-            
-            try
-            {
-                matchClient.AccountId = await userClient.GetAccountId(SummonerName);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-            
         }
 
         public async Task<List<MatchResult>> GetMatchesFromSeason(int seasonId, Dictionary<string, string> queryStringOptions = null)
         {
             try
             {
-                return await matchClient.GetMatchesBySeasonAsync(seasonId, queryStringOptions);
+                if (string.IsNullOrEmpty(RiotApiUtils.AccountId))
+                {
+                    RiotApiUtils.AccountId = await userClient.GetAccountId(SummonerName);
+                }
 
+                return await matchClient.GetMatchesBySeasonAsync(seasonId, queryStringOptions);
             } catch(Exception e)
             {
                 throw new Exception(string.Format("Failed to get matches for season {0}", seasonId), e);
@@ -58,7 +43,7 @@ namespace RiotSimplify
         public async Task<MatchResult> GetMatchDetails(int matchId, Dictionary<string, string> queryStringOptions = null)
         {
             try
-            {
+            {               
                 return await matchClient.GetMatchResultAsync(matchId, queryStringOptions);
             }
             catch (Exception e)
@@ -70,7 +55,6 @@ namespace RiotSimplify
         public void SetSummonerName(string newSummonerName)
         {
             SummonerName = newSummonerName;
-            Init();
         }
     }
 }

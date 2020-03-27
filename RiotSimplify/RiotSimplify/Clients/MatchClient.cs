@@ -17,25 +17,24 @@ namespace RiotSimplify.Clients
         private String matchListEndpoint = "/lol/match/v4/matchlists/by-account/";
         private String uniqueMatchEndpoint = "/lol/match/v4/matches/";
 
-        public String AccountId { get; set; }
-
         internal async Task<List<MatchResult>> GetMatchesBySeasonAsync(int seasonId, Dictionary<string, string> queryStringOptions)
         {
             MatchlistDto dto = null;
             ConcurrentBag<MatchResult> results = new ConcurrentBag<MatchResult>();
 
-            if (String.IsNullOrEmpty(AccountId))
+            if (String.IsNullOrEmpty(RiotApiUtils.AccountId))
             {
                 throw new Exception("AccountId cannot be null or empty");
             }
 
             try
             {
-                long seasonTimestamp = Utils.GetSeasonTimestamp(seasonId);
+                long seasonTimestamp = Utils.GetSeasonTimestamp(seasonId) * 1000; // to ms
 
                 Url request = RiotApiUtils.Api
                         .AppendPathSegment(matchListEndpoint)
-                        .AppendPathSegment(AccountId)
+                        .AppendPathSegment(RiotApiUtils.AccountId)
+                        .SetQueryParam("beginTime", seasonTimestamp)
                         .SetQueryParam("api_key", RiotApiUtils.ApiKey)
                         .AppendQueryString(queryStringOptions);
 
@@ -46,7 +45,7 @@ namespace RiotSimplify.Clients
                 {
                     MatchlistDto current = await FetchMatches(request, startIndex);
 
-                    if (current.Matches.Last().Timestamp <= seasonTimestamp)
+                    if (current.Matches.Last().Timestamp <= seasonTimestamp || current.Matches.Count() < 100)
                     {
                         completed = true;
                     }
@@ -82,6 +81,7 @@ namespace RiotSimplify.Clients
                 catch (Exception e)
                 {
                     // IF WE HAVE MORE THAN 100 MATCHES
+                   
                     return results.ToList();
                 }
                 
@@ -102,7 +102,7 @@ namespace RiotSimplify.Clients
 
             var detail = await url.GetJsonAsync<MatchDetailsDto>();
 
-            return MatchResult.MapFrom(detail, AccountId);
+            return MatchResult.MapFrom(detail, RiotApiUtils.AccountId);
         }
 
 
