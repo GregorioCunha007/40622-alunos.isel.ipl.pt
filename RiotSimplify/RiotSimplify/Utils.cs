@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Flurl;
 using Newtonsoft.Json;
 
 namespace RiotSimplify
@@ -54,6 +55,21 @@ namespace RiotSimplify
             {
                 throw new Exception(string.Format("Failed getting timestamp for seasonId {0}", seasonId), e);
             }
+        }
+
+        public static Url AppendQueryString(this Url url, Dictionary<string, string> queryString)
+        {
+            if (queryString == null)
+            {
+                return url;
+            }
+
+            foreach(KeyValuePair<string, string> keyVal in queryString)
+            {
+                url.SetQueryParam(keyVal.Key, keyVal.Value);
+            }
+
+            return url;
         }
     }
 }

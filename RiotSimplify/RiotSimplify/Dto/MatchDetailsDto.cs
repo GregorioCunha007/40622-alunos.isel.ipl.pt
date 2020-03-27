@@ -9,6 +9,8 @@ namespace RiotSimplify.Dto
     public class MatchDetailsDto
     {
         public long GameId { get; set; }
+   
+        public long GameCreation { get; set; }
 
         public List<ParticipantDetails> Participants { get; set; }
 
@@ -26,6 +28,8 @@ namespace RiotSimplify.Dto
         public int ParticipantId { get; set; }
         public int ChampionId { get; set; }
         public Stat Stats { get; set; }
+
+        public Timeline Timeline { get; set; }
     }
 
     public class Stat
@@ -35,6 +39,12 @@ namespace RiotSimplify.Dto
         public int Deaths { get; set; }
         public int Assists { get; set; }
         public int GoldEarned { get; set; }
+    }
+
+    public class Timeline
+    {
+        public string Role { get; set; }
+        public string Lane { get; set; }  
     }
 
     public class Player

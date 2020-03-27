@@ -11,29 +11,66 @@ namespace RiotSimplify
 {
     public class RiotSimplify : MatchService
     {
-        private String _apiKey;
-        private String _apiUrl = "https://euw1.api.riotgames.com";
-        private MatchClient _matchClient;
+        private MatchClient matchClient;
+        private UserClient userClient;
 
         public String SummonerName { get; set; } 
 
         public RiotSimplify (string apiKey, string summonerName = null)
         {
-            _apiKey = apiKey;
+            RiotApiUtils.ApiKey = apiKey;
             SummonerName = summonerName;
-            _matchClient = new MatchClient();
+            matchClient = new MatchClient();
+            userClient = new UserClient();
+            Init();
         }
 
-        public List<MatchResult> GetMatchesFromSeason(int seasonId, Dictionary<string, string> queryStringOptions = null)
+        private async void Init()
+        {
+            if (userClient == null)
+            {
+                userClient = new UserClient();
+            }
+            
+            try
+            {
+                matchClient.AccountId = await userClient.GetAccountId(SummonerName);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
+        }
+
+        public async Task<List<MatchResult>> GetMatchesFromSeason(int seasonId, Dictionary<string, string> queryStringOptions = null)
         {
             try
             {
-                return _matchClient.GetMatchesBySeason(seasonId, queryStringOptions);
+                return await matchClient.GetMatchesBySeasonAsync(seasonId, queryStringOptions);
 
             } catch(Exception e)
             {
                 throw new Exception(string.Format("Failed to get matches for season {0}", seasonId), e);
             }
+        }
+
+        public async Task<MatchResult> GetMatchDetails(int matchId, Dictionary<string, string> queryStringOptions = null)
+        {
+            try
+            {
+                return await matchClient.GetMatchResultAsync(matchId, queryStringOptions);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(string.Format("Failed to get match with id {0}", matchId), e);
+            }
+        }
+
+        public void SetSummonerName(string newSummonerName)
+        {
+            SummonerName = newSummonerName;
+            Init();
         }
     }
 }
