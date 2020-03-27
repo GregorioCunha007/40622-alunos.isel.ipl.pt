@@ -23,6 +23,12 @@ namespace RiotSimplify
             if ((lane == "BOTTOM" || (lane == "NONE" && role == "DUO_SUPPORT"))) return "SUPPORT";
             else return "UNKNOWN";
         }
+
+        public static int GetQueueID(string queue)
+        {
+            if (queue == "SOLODUO") return 420;
+            else return 0;
+        }
         
     }
 }

@@ -17,7 +17,7 @@ namespace RiotSimplify.Clients
         private String matchListEndpoint = "/lol/match/v4/matchlists/by-account/";
         private String uniqueMatchEndpoint = "/lol/match/v4/matches/";
 
-        internal async Task<List<MatchResult>> GetMatchesBySeasonAsync(int seasonId, Dictionary<string, string> queryStringOptions)
+        internal async Task<List<MatchResult>> GetMatchesBySeasonAsync(int seasonId, string queue)
         {
             MatchlistDto dto = null;
             ConcurrentBag<MatchResult> results = new ConcurrentBag<MatchResult>();
@@ -36,14 +36,18 @@ namespace RiotSimplify.Clients
                         .AppendPathSegment(RiotApiUtils.AccountId)
                         .SetQueryParam("beginTime", seasonTimestamp)
                         .SetQueryParam("api_key", RiotApiUtils.ApiKey)
-                        .AppendQueryString(queryStringOptions);
+                        .SetQueryParam("queue", RiotApiUtils.GetQueueID(queue));
 
                 bool completed = false;
-                int startIndex = 0;
+                
+                if (!request.QueryParams.ContainsKey("beginIndex"))
+                {
+                    request.SetQueryParam("beginIndex", 0);
+                }
 
                 do
                 {
-                    MatchlistDto current = await FetchMatches(request, startIndex);
+                    MatchlistDto current = await request.GetJsonAsync<MatchlistDto>();
 
                     if (current.Matches.Last().Timestamp <= seasonTimestamp || current.Matches.Count() < 100)
                     {
@@ -60,7 +64,7 @@ namespace RiotSimplify.Clients
                         dto.endIndex = current.endIndex;
                     }
 
-                    startIndex += 100;
+                    request.SetQueryParam("beginIndex", (request.QueryParams["beginIndex"] as int?) + 100);
 
                 } while (!completed);
 
@@ -69,7 +73,7 @@ namespace RiotSimplify.Clients
                 dto.endIndex -= removedMatches;
 
                 try
-                {
+                { 
                     // WILL CAP OFF IN 100 REQUESTS 
                     foreach (var match in dto.Matches)
                     {
@@ -103,16 +107,6 @@ namespace RiotSimplify.Clients
             var detail = await url.GetJsonAsync<MatchDetailsDto>();
 
             return MatchResult.MapFrom(detail, RiotApiUtils.AccountId);
-        }
-
-
-        /*
-         * PRIVATE METHODS
-         * 
-         */
-        private Task<MatchlistDto> FetchMatches(Url url, int startIndex = 0)
-        {
-            return url.SetQueryParam("beginIndex", startIndex).GetJsonAsync<MatchlistDto>();
         }
     }
 }

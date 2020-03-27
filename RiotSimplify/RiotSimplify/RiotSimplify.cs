@@ -24,7 +24,7 @@ namespace RiotSimplify
             userClient = new UserClient();
         }
 
-        public async Task<List<MatchResult>> GetMatchesFromSeason(int seasonId, Dictionary<string, string> queryStringOptions = null)
+        public async Task<List<MatchResult>> GetMatchesFromSeason(int seasonId, string queue)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace RiotSimplify
                     RiotApiUtils.AccountId = await userClient.GetAccountId(SummonerName);
                 }
 
-                return await matchClient.GetMatchesBySeasonAsync(seasonId, queryStringOptions);
+                return await matchClient.GetMatchesBySeasonAsync(seasonId, queue);
             } catch(Exception e)
             {
                 throw new Exception(string.Format("Failed to get matches for season {0}", seasonId), e);
