@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Flurl;
@@ -12,33 +13,36 @@ namespace RiotSimplify
 {
     public static class Utils
     {
-        private static string LoadJson(string path)
+        private static string LoadJson(string fileName)
         {
             try
             {
-                using (StreamReader r = new StreamReader(path))
-                {
-                    if (r == null)
-                    {
-                        throw new Exception("File has no content");
-                    }
+                var assembly = Assembly.GetExecutingAssembly();
+                var resourceName = "RiotSimplify.StaticData." + fileName;
 
-                    string json = r.ReadToEnd();
-                    return json;
+                string resource = null;
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        resource = reader.ReadToEnd();
+                    }
                 }
+                return resource;
 
             } catch(Exception e)
             {
-                throw new Exception(string.Format("Error loading from file path {0}", path), e);
+                throw new Exception(string.Format("Error loading from file path {0}", fileName), e);
             }
         }
-        
+
+
         public static long GetSeasonTimestamp(int seasonId)
         {
             try
             {
                 
-                dynamic json = JsonConvert.DeserializeObject(LoadJson(@"D:\Riot-Simplify\RiotSimplify\RiotSimplify\StaticData\patches.json"));
+                dynamic json = JsonConvert.DeserializeObject(LoadJson("patches.json"));
 
                 foreach (var patch in json.patches)
                 {
@@ -64,7 +68,7 @@ namespace RiotSimplify
             try
             {
 
-                dynamic icons = JsonConvert.DeserializeObject(LoadJson(@"D:\Riot-Simplify\RiotSimplify\RiotSimplify\StaticData\summoner-icons.json"));
+                dynamic icons = JsonConvert.DeserializeObject(LoadJson("summoner-icons.json"));
 
                 foreach (var icon in icons)
                 {
