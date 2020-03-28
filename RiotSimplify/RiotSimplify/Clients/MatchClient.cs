@@ -9,6 +9,7 @@ using Flurl;
 using RiotSimplify.Dto;
 using System.Runtime.Caching;
 using System.Collections.Concurrent;
+using Dasync.Collections;
 
 namespace RiotSimplify.Clients
 {
@@ -73,12 +74,14 @@ namespace RiotSimplify.Clients
                 dto.endIndex -= removedMatches;
 
                 try
-                { 
+                {
                     // WILL CAP OFF IN 100 REQUESTS 
-                    foreach (var match in dto.Matches)
+
+                    await dto.Matches.ParallelForEachAsync(async match =>
                     {
-                        results.Add(await GetMatchResultAsync(match.GameId));
-                    }
+                        var detail = await GetMatchResultAsync(match.GameId);
+                        results.Add(detail);
+                    }, maxDegreeOfParallelism: 20);
 
                     return results.ToList();
                 }
