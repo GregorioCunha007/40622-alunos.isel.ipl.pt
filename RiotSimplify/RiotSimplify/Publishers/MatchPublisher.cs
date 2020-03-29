@@ -46,10 +46,10 @@ namespace RiotSimplify.Publishers
                     OnMatchesReceived(matches);
                 }
                 else
-                {
-                    // Keen listening while we have results for this season
+                {                    
                     LastMatchIndex = LastMatchIndex + matches.Count;
                     OnMatchesReceived(matches);
+                    // After cooldown, keep listening while we have results for this season
                     Thread.Sleep(CooldownTime);
                     Listen(season, queue);
                 }
