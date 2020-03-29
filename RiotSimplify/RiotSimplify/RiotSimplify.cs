@@ -1,5 +1,6 @@
 ﻿using RiotSimplify.Clients;
 using RiotSimplify.Mappers;
+using RiotSimplify.Publishers;
 using RiotSimplify.Services;
 using System;
 using System.Collections.Generic;
@@ -9,31 +10,28 @@ using System.Threading.Tasks;
 
 namespace RiotSimplify
 {
-    public class RiotApiClient : MatchService, UserAccountService
+    public class RiotApiClient : MatchService, UserAccountService, IMatchListenerService
     {
+        /* Clients */
         private MatchClient matchClient;
         private UserClient userClient;
-
+        /* Important data */
         public String SummonerName { get; set; } 
 
         public RiotApiClient (string apiKey, string summonerName = null)
         {
             RiotApiUtils.ApiKey = apiKey;
-            SummonerName = summonerName;
+            RiotApiUtils.SummonerName = summonerName;
             matchClient = new MatchClient();
             userClient = new UserClient();
         }
 
-        public async Task<List<MatchResult>> GetMatchesFromSeason(int seasonId, string queue)
+        public async Task<List<MatchResult>> GetMatchesFromSeason(int seasonId, string queue, int beginIndex = 0, int endIndex = 100, bool throwException = true)
         {
             try
             {
-                if (string.IsNullOrEmpty(RiotApiUtils.AccountId))
-                {
-                    RiotApiUtils.AccountId = await userClient.GetAccountId(SummonerName);
-                }
+                return await matchClient.GetMatchesBySeasonAsync(seasonId, queue, beginIndex, endIndex, throwException); 
 
-                return await matchClient.GetMatchesBySeasonAsync(seasonId, queue);
             } catch(Exception e)
             {
                 throw new Exception(string.Format("Failed to get matches for season {0}", seasonId), e);
@@ -64,9 +62,11 @@ namespace RiotSimplify
             }
         }
 
-        public void SetSummonerName(string newSummonerName)
+        public void Listen(int season, string queue, MatchPublisher.MatchesReceivedEventHandler subscriberMethod)
         {
-            SummonerName = newSummonerName;
+            var publisher = new MatchPublisher();
+            publisher.MatchesReceived += subscriberMethod;
+            publisher.Listen(season, queue);
         }
     }
 }

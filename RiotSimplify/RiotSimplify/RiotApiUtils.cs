@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RiotSimplify.Clients;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +11,10 @@ namespace RiotSimplify
     {
         public static string Api = "https://euw1.api.riotgames.com";
         public static string IconsApi = "https://ddragon.leagueoflegends.com/cdn/6.3.1/img/profileicon/";
-
         public static string ApiKey { get; internal set; }
-
         public static string AccountId { get; internal set; }
+        public static string SummonerName { get; internal set; }
+        private static UserClient UserClient = new UserClient();
 
         public static string GetPosition(string lane, string role)
         {
@@ -31,5 +32,13 @@ namespace RiotSimplify
             else return 0;
         }
         
+        public static async Task FetchSummonerData ()
+        {
+            if (string.IsNullOrEmpty(AccountId))
+            {
+                var accId = await UserClient.GetAccountId(SummonerName);
+                AccountId = accId;
+            }
+        }
     }
 }

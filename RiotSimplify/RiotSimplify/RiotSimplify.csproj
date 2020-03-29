@@ -79,9 +79,11 @@
     <Compile Include="Dto\MatchReferenceDto.cs" />
     <Compile Include="Dto\UserInfoDto.cs" />
     <Compile Include="Mappers\MatchResult.cs" />
+    <Compile Include="Publishers\MatchPublisher.cs" />
     <Compile Include="RiotApiUtils.cs" />
     <Compile Include="RiotSimplify.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IMatchListenerService.cs" />
     <Compile Include="Services\MatchService.cs" />
     <Compile Include="Services\UserAccountService.cs" />
     <Compile Include="Utils.cs" />
