@@ -10,7 +10,7 @@ namespace RiotSimplify.Services
 {
     public interface MatchService
     { 
-        Task<List<MatchResult>> GetMatchesFromSeason(int seasonId, string queue, int beginIndex = 0, int endIndex = 100, bool throwException = true);
+        Task<List<MatchResult>> GetMatchesFromSeason(int seasonId, string queue, int beginIndex = 0, int endIndex = 100, bool tooManyRequestsThrowException = true);
 
         Task<MatchResult> GetMatchDetails(int matchId, Dictionary<string, string> queryStringOptions = null);
     }

@@ -26,7 +26,7 @@ namespace RiotSimplify
             userClient = new UserClient();
         }
 
-        public async Task<List<MatchResult>> GetMatchesFromSeason(int seasonId, string queue, int beginIndex = 0, int endIndex = 100, bool throwException = true)
+        public async Task<List<MatchResult>> GetMatchesFromSeason(int seasonId, string queue, int beginIndex = 0, int endIndex = 100, bool tooManyRequestsThrowException = true)
         {
             try
             {

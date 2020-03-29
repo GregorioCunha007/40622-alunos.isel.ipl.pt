@@ -30,28 +30,35 @@ namespace RiotSimplify.Publishers
         public async void Listen(int season, string queue)
         {
             List<MatchResult> matches = null;
-            
-            matches = await GetMatchesBySeasonAsync(season, queue, LastMatchIndex, LastMatchIndex + 100, false);
 
-            if (!matches.Any())
+            try
             {
-                return;
-            }
+                matches = await GetMatchesBySeasonAsync(season, queue, LastMatchIndex, LastMatchIndex + 100, false);
 
-            if (matches.Last().Timestamp <= Utils.GetSeasonTimestamp(season))
-            {
-                // No more results for the time being. Cancel the retry
-                OnMatchesReceived(matches);
+                if (!matches.Any())
+                {
+                    return;
+                }
+
+                if (matches.Last().Timestamp <= Utils.GetSeasonTimestamp(season))
+                {
+                    // No more results for the time being. Cancel the retry
+                    OnMatchesReceived(matches);
+                }
+                else
+                {
+                    // Keen listening while we have results for this season
+                    LastMatchIndex = LastMatchIndex + matches.Count;
+                    OnMatchesReceived(matches);
+                    Thread.Sleep(CooldownTime);
+                    Listen(season, queue);
+                }
             }
-            else
+            catch (Exception e)
             {
-                // Keen listening while we have results for this season
-                LastMatchIndex = LastMatchIndex + matches.Count;
-                OnMatchesReceived(matches);
-                Thread.Sleep(CooldownTime);
-                Listen(season, queue);
+                throw e;
             }
-            
+                       
         }
         
     }

@@ -26,7 +26,7 @@ namespace RiotSimplify.Clients
         /// <param name="seasonId"> Season which has the matches you want </param>
         /// <param name="queue"> Ladder from which the matches were played </param>
         /// <returns></returns>
-        public async Task<List<MatchResult>> GetMatchesBySeasonAsync(int seasonId, string queue, int beginIndex = 0, int endIndex = 100, bool throwException = true)
+        public async Task<List<MatchResult>> GetMatchesBySeasonAsync(int seasonId, string queue, int beginIndex = 0, int endIndex = 100, bool tooManyRequestsThrowException = true)
         {
             await RiotApiUtils.FetchSummonerData();
 
@@ -64,14 +64,22 @@ namespace RiotSimplify.Clients
                   
                     return results.ToList();
                 }
-                catch (Exception e)
+                catch (FlurlHttpException e)
                 {
-                    if (throwException)
+                    if (e.Call.HttpStatus == ((System.Net.HttpStatusCode)429))
                     {
-                        throw e;
+                        if (tooManyRequestsThrowException)
+                        {
+                            throw e;
+                        }
+                        else
+                        {
+                            return results.ToList();
+                        }
                     }
 
-                    return results.ToList();
+                    // Propagate any other type of exception other than 429
+                    throw e;
                 }                
             }
             catch (Exception e)
