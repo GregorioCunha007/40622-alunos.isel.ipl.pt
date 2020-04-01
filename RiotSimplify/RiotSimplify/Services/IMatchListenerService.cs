@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace RiotSimplify.Services
 {
-    interface IMatchListenerService
+    public interface IMatchListenerService
     {
-        void Listen(int season, string queue, MatchPublisher.MatchesReceivedEventHandler subscriberMethod);
+        void SubscribeForMatches(int season, string queue, MatchPublisher.MatchesReceivedEventHandler subscriberMethod);
     }
 }

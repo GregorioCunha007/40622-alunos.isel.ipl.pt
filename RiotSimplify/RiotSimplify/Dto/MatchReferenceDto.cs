@@ -16,5 +16,6 @@ namespace RiotSimplify.Dto
         public int Queue;
         public string Role;
         public long Timestamp;
+        public string Position => RiotApiUtils.GetPosition(Lane, Role);
     }
 }
