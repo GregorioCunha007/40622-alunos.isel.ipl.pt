@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RiotSimplify.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,7 @@ namespace RiotSimplify.Services
     public interface UserAccountService
     {
         Task<string> GetSummonerIcon();
+
+        Task<List<EntryDto>> GetEntries();
     }
 }

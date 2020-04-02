@@ -76,11 +76,24 @@ namespace RiotSimplify
             }
         }
 
+        public async Task<List<EntryDto>> GetEntries()
+        {
+            try
+            {
+                return await userClient.GetEntries();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Failed to get user entries", e);
+            }
+        }
+
         public void SubscribeForMatches(int season, string queue, MatchPublisher.MatchesReceivedEventHandler subscriberMethod)
         {
             var publisher = new MatchPublisher();
             publisher.MatchesReceived += subscriberMethod;
             publisher.Listen(season, queue);          
         }
+
     }
 }

@@ -78,6 +78,7 @@
     <Compile Include="Dto\MatchlistDto.cs" />
     <Compile Include="Dto\MatchReferenceDto.cs" />
     <Compile Include="Dto\UserInfoDto.cs" />
+    <Compile Include="Dto\EntryDto.cs" />
     <Compile Include="Mappers\MatchResult.cs" />
     <Compile Include="Publishers\MatchPublisher.cs" />
     <Compile Include="RiotApiUtils.cs" />
